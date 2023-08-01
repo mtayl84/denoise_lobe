@@ -1,0 +1,58 @@
+
+subjects:
+#    - '001'
+#    - '002'
+#    - '004'
+    - '006'
+    - '007'
+    - '009'
+    - '012'
+    - '013'
+#    - '014'
+#    - '015'
+#    - '017'
+
+preproc_t1: '../../fmriprep_20.2.6/sub-{subject}/anat/sub-{subject}_acq-MPRvNavAvgEcho12_run-1_desc-preproc_T1w.nii.gz'
+
+#this now is set to be T1w space bold
+preproc_bold: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz'
+
+preproc_bold_json: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-MNI152NLin2009cAsym_desc-preproc_bold.json'
+
+
+preproc_mask_bold: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz'
+preproc_mask_t1: '../../fmriprep_20.2.6/sub-{subject}/anat/sub-{subject}_acq-MPRvNavAvgEcho12_run-1_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz'
+
+
+
+preproc_confounds: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_desc-confounds_timeseries.tsv'
+
+
+
+warp_pre_to_mni: '../../fmriprep_20.2.6/sub-{subject}/anat/sub-{subject}_acq-MPRvNavAvgEcho12_run-1_from-T1w_to-{space}_mode-image_xfm.h5'
+warp_mni_to_pre: '../../fmriprep_20.2.6/sub-{subject}/anat/sub-{subject}_acq-MPRvNavAvgEcho12_run-1_from-{space}_to-T1w_mode-image_xfm.h5'
+
+
+
+denoise:
+  24HMP8PhysSpikeReg:
+    clean_img_opts:
+      standardize: True
+      detrend: False
+      low_pass: 0.08
+      high_pass: 0.01
+    confounds_name:
+      - csf 
+      - csf_derivative1 
+      - csf_derivative1_power2
+      - csf_power2 
+    confounds_like:
+      - white_matter
+      - trans
+      - rot
+      - motion_outlier
+      - steady_state_outlier
+
+
+ants_container: /project/6050199/akhanf/singularity/bids-apps/khanlab_neuroglia-core_latest.sif
+

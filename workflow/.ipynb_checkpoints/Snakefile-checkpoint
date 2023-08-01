@@ -1,0 +1,36 @@
+from snakebids import bids
+
+configfile: 'config/config.yml'
+
+
+rule all:
+    input: 
+        expand(bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas}',network='Yeo7',suffix='conn.txt'),
+            subject=config['subjects'],
+            task='movie',
+            denoise=config['denoise'].keys(),
+            fwhm='5',
+            space='MNI152NLin2009cAsym',
+            atlas='schaefer')
+
+	    
+
+rule warp_atlas_to_preop_t1:
+    input:
+        atlas = 'resources/schaefer_2018/Schaefer2018_300Parcels_7Networks_order_FSLMNI152_1mm.nii.gz',
+        warp_mni_to_pre = config['warp_mni_to_pre'],
+        ref = config['preproc_t1']
+    output: 
+        atlas = bids(root='results',subject='{subject}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz')
+    container: config['ants_container']
+    group: 'subj'
+    shell:
+        'antsApplyTransforms -d 3 -e 0 -i {input.atlas} -o {output.atlas} -r {input.ref} '
+        '-n NearestNeighbor '
+        '-t {input.warp_mni_to_pre}'
+
+
+
+include: 'rules/interimfmri.smk'
+
+
